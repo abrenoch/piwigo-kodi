@@ -4,16 +4,10 @@ import sys, urllib, urllib2, cookielib, xbmcgui, xbmcaddon, pickle, simplejson a
 __addon__       = xbmcaddon.Addon()
 __addonname__   = __addon__.getAddonInfo('name')
 __profile__ = xbmc.translatePath( __addon__.getAddonInfo('profile') ).decode("utf-8")
-
 # __settings__ = xbmcaddon.Addon(id='script.image.lastfm.slideshow')
 # __language__ = __settings__.getLocalizedString
-# lib = os.path.join(__settings__.getAddonInfo('path'), 'resources', 'lib')
-# sys.path.append(lib)
 
-# print sys.path
 from xbmcapi import XBMCSourcePlugin
-
-# API_KEY = 'x1XhpKkt9qCtqyXdDEGHp5TCDQ1TOWm2VTLiWUm0FHpdkHI5Rj'
 
 cookie_filename = __profile__+'pwg.cookie'
 cookieJar = cookielib.LWPCookieJar(cookie_filename)
@@ -34,7 +28,6 @@ def home():
 	}
 	for key in opts.iteritems():
 		print key[0]
-		# thumbnail = 'http://api.tumblr.com/v2/blog/%s.tumblr.com/avatar/256' % cat
 		listitem = xbmcgui.ListItem(key[0])
 		plugin.addDirectoryItem(url='%s/%s' % (plugin.root, key[1]), listitem=listitem, isFolder=True)
 	plugin.endOfDirectory()	
@@ -58,69 +51,43 @@ def serverLogin():
 		xbmcgui.Dialog().ok(__addonname__, 'Username and/or password incorrect.', 'Please check the configuration')
 
 def serverRequest(method,extraData = []):
-	url2 = '%s/ws.php?format=json' % (plugin.getSetting('server'))
+	url = '%s/ws.php?format=json' % (plugin.getSetting('server'))
 	values = {
 		'method' : method
 	}
-
-
 	try:
 		for key in extraData.iteritems():
 			values[key[0]] = key[1]
 	except:
 		pass
-
-	print '---serverdata---%s' % (values)
-
-	data2 = urllib.urlencode(values)
-	req2 = urllib2.Request(url2, data2)
-	conn2 = opener.open(req2)
-	response2 = json.loads(conn2.read())
-	conn2.close()
-	if(response2['stat'] == 'ok') :
-		return response2['result']
+	data = urllib.urlencode(values)
+	req = urllib2.Request(url, data)
+	conn = opener.open(req)
+	response = json.loads(conn.read())
+	conn.close()
+	if(response['stat'] == 'ok') :
+		return response['result']
 	else :
-		xbmcgui.Dialog().ok(__addonname__, 'There was an error retrieving data', 'Method: '+method)
+		xbmcgui.Dialog().ok(__addonname__, 'There was an error retrieving data', 'Method: '+method, response['message'])
 
-def browseTags():
-	tags = serverRequest('pwg.tags.getList');
-	for tag in tags['tags']:
-		# thumbnail = 'http://api.tumblr.com/v2/blog/%s.tumblr.com/avatar/256' % cat
-		listitem = xbmcgui.ListItem(tag['name'])
-		plugin.addDirectoryItem(url='tags/%s' % (tag['id']), listitem=listitem, isFolder=True)
+def populateDirectory(array):
+	for obj in array:
+		try:
+			thumb = obj['tn_url'];
+		except:
+			listitem = xbmcgui.ListItem(obj['name'])
+		else:
+			listitem = xbmcgui.ListItem(obj['name'],iconImage=thumb)
+		finally:		
+			plugin.addDirectoryItem(url='%s/%s/%s' % (plugin.root, plugin.path, obj['id']), listitem=listitem, isFolder=True)
 	plugin.endOfDirectory()
 
-def browseCategories():
-	cats = serverRequest('pwg.categories.getList');
-	for cat in cats['categories']:
-		listitem = xbmcgui.ListItem(cat['name'],iconImage=cat['tn_url'])
-		plugin.addDirectoryItem(url='%s/%s/%s' % (plugin.root, plugin.path, cat['id']), listitem=listitem, isFolder=True)
-	plugin.endOfDirectory()
-
-def browseCategoriesImages(catId):
-	imgs = serverRequest('pwg.categories.getImages',{'cat_id':catId});
+def populateImages(imgs):
 	for img in imgs['images']:
 		listitem = xbmcgui.ListItem(img['name'],iconImage=img['derivatives']['thumb']['url'])
+		listitem.setInfo('pictures',{'date':img['date_available']})
 		plugin.addDirectoryItem(url=img['element_url'], listitem=listitem)
 	plugin.endOfDirectory()
-
-# def catagories():
-# 	cats = [c.strip() for c in plugin.getSetting('tumblrs').split()]
-# 	for cat in cats:
-# 		thumbnail = 'http://api.tumblr.com/v2/blog/%s.tumblr.com/avatar/256' % cat
-# 		listitem = xbmcgui.ListItem(cat, iconImage=thumbnail)
-# 		ok = plugin.addDirectoryItem(url='%s/%s' % (plugin.root, cat), listitem=listitem, isFolder=True)
-# 	plugin.endOfDirectory()
-
-# urls = []
-# def listimages(tumblr):
-# 	print tumblr
-# 	start = int(plugin.query.get('start',0))
-# 	url = 'http://api.tumblr.com/v2/blog/%s.tumblr.com/posts/photo?api_key=%s&offset=%d' % (tumblr, API_KEY, start)
-# 	print 'URL:', url
-# 	fd = urllib2.urlopen(url)
-# 	dom = json.load(fd)
-# 	fd.close()
 
 # 	posts = dom['response']['posts']
 # 	if len(posts) >= 20:
@@ -151,43 +118,35 @@ def browseCategoriesImages(catId):
 # plugin.addDirectoryItem(url='http://velocityagency.com/wp-content/uploads/2013/08/go.jpg', listitem=listitem)
 # plugin.endOfDirectory()
 
+def allCategories():
+	types = serverRequest('pwg.categories.getList')['categories']
+	args = []
+	for oType in types:
+		args.append({'cat_id': oType['id']})
+	return args
+
 if plugin.path:
 	split = plugin.path.split('/')
-	print '>>>>>>plugin.path: '+plugin.path
-	print '>>>>>>>>plugin.path.split: %s' % (split)
-
 	if(split[0] == 'tags') :
-		browseTags()
-	elif(split[0] == 'cats') :
-
 		try:
-			catIds = split[1]
-			browseCategoriesImages(catIds)
+			typeId = split[1]
 		except:
-			browseCategories()
+			populateDirectory(serverRequest('pwg.tags.getList')['tags'])
+		else :
+			populateImages(serverRequest('pwg.tags.getImages',{'tag_id':typeId}))		
+	elif(split[0] == 'cats') :
+		try:
+			typeId = split[1]
+		except:
+			populateDirectory(serverRequest('pwg.categories.getList')['categories'])
+		else :
+			populateImages(serverRequest('pwg.categories.getImages',{'cat_id':typeId}))
+	elif(split[0] == 'recent'):
+		populateImages(serverRequest('pwg.categories.getImages',[{'order':'date_available DESC'}, allCategories()]))
+	elif(split[0] == 'random'):
+		populateImages(serverRequest('pwg.categories.getImages',[{'order':'random'}, allCategories()]))
 	else :
 		home()		
-
-	# listimages(tumblr)
-	# try:
-	# serverLogin()
-
-	# xbmcgui.Dialog().ok(__addonname__, 'plugin.path present')
-	# except: 
-	# 	xbmcgui.Dialog().ok(__addonname__, 'Username and/or password incorrect.', 'Please check the configuration')
- #  		pass
-
-
 else:
-
-	# try:
 	serverLogin()
-	# print '------------lgin fired'
-	# except: 
-	# xbmcgui.Dialog().ok(__addonname__, 'no plugin.path')
-
-	# print plugin.root + plugin.path
- #  		pass
-
-	
 	home()
