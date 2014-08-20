@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import sys, urllib, urllib2, cookielib, xbmcgui, xbmcaddon, pickle, simplejson as json
+import sys, urllib, urllib2, cookielib, xbmcgui, xbmcaddon, simplejson as json
 
 __addon__       = xbmcaddon.Addon()
 __addonname__   = __addon__.getAddonInfo('name')
@@ -21,8 +21,8 @@ plugin = XBMCSourcePlugin()
 
 def home():
 	opts = {
-		'Recent Photos':'recent',
-		'Random Photos':'random',
+		'Recent Photos':'recent/0',
+		'Random Photos':'random/0',
 		'Browse by Categories':'cats',
 		'Browse by Tags':'tags'
 	}
@@ -41,14 +41,26 @@ def serverLogin():
 	}
 	data = urllib.urlencode(values)
 	req = urllib2.Request(url, data)
-	conn = opener.open(req)
-	cookieJar.save(ignore_discard=True)
-	response = json.loads(conn.read())
-	conn.close()
-	if(response['stat'] == 'ok') :
-		return True
-	else :
-		xbmcgui.Dialog().ok(__addonname__, 'Username and/or password incorrect.', 'Please check the configuration')
+	try:
+		conn = opener.open(req)
+		cookieJar.save(ignore_discard=True)
+		connRead = conn.read()
+		conn.close()
+	except:
+		die(True)
+	else:
+		try:
+			response = json.loads(connRead)
+		except:
+			die(True)
+		else:
+			if(response['stat'] == 'ok') :
+				return True
+			else:
+				if(plugin.getSetting('username') != 'guest' and plugin.getSetting('username') != '') :
+					xbmcgui.Dialog().ok(__addonname__, 'Username and/or password incorrect', 'Please check the configuration')
+					die(False)
+			pass
 
 def serverRequest(method,extraData = []):
 	url = '%s/ws.php?format=json' % (plugin.getSetting('server'))
@@ -69,6 +81,7 @@ def serverRequest(method,extraData = []):
 		return response['result']
 	else :
 		xbmcgui.Dialog().ok(__addonname__, 'There was an error retrieving data', 'Method: '+method, response['message'])
+		die(False)
 
 def populateDirectory(array):
 	for obj in array:
@@ -79,7 +92,7 @@ def populateDirectory(array):
 		else:
 			listitem = xbmcgui.ListItem(obj['name'],iconImage=thumb)
 		finally:		
-			plugin.addDirectoryItem(url='%s/%s/%s' % (plugin.root, plugin.path, obj['id']), listitem=listitem, isFolder=True)
+			plugin.addDirectoryItem(url='%s/%s/%s/0' % (plugin.root, plugin.path, obj['id']), listitem=listitem, isFolder=True)
 	plugin.endOfDirectory()
 
 def populateImages(imgs):
@@ -87,50 +100,28 @@ def populateImages(imgs):
 		listitem = xbmcgui.ListItem(img['name'],iconImage=img['derivatives']['thumb']['url'])
 		listitem.setInfo('pictures',{'date':img['date_available']})
 		plugin.addDirectoryItem(url=img['element_url'], listitem=listitem)
+	if(int(plugin.getSetting('limit')) <= int(imgs['paging']['count'])) :
+		listitem = xbmcgui.ListItem('> Next %s' % (plugin.getSetting('limit')))
+		newpath = plugin.path.split('/')
+		del newpath[-1]
+		newpathCon = '/'.join(newpath)
+		plugin.addDirectoryItem(url='%s/%s/%s' % (plugin.root, newpathCon, (int(imgs['paging']['page']) + 1)), listitem=listitem, isFolder=True)
 	plugin.endOfDirectory()
 
-def recursiveCategoryImages(catId):
-	categories = serverRequest('pwg.categories.getList',{'cat_id':catId})['categories']
-	del categories[0]
-	for catg in categories:
-		try:
-			thumb = catg['tn_url'];
-		except:
-			listitem = xbmcgui.ListItem(catg['name'])
-		else:
-			listitem = xbmcgui.ListItem('> '+catg['name'],iconImage=thumb)
-		finally:		
-			plugin.addDirectoryItem(url='%s/cats/%s' % (plugin.root, catg['id']), listitem=listitem, isFolder=True)
-	populateImages(serverRequest('pwg.categories.getImages',{'cat_id':catId}))	
-
-# 	posts = dom['response']['posts']
-# 	if len(posts) >= 20:
-# 		thumbnail = 'http://api.tumblr.com/v2/blog/%s.tumblr.com/avatar/256' % tumblr
-# 		listitem = xbmcgui.ListItem('Next Page (%d - %d)' % (start + 20, start + 40), iconImage=thumbnail)
-# 		url = plugin.root + plugin.path + '?start=' + str(start + 20)
-# 		plugin.addDirectoryItem(url=url, listitem=listitem,isFolder=True)
-# 	post_index = start
-# 	for post in posts:
-# 		index = 1
-# 		children = [photo['alt_sizes'][0] for photo in post['photos']]
-# 		for tag in children:
-# 			if len(children) > 1:
-# 				label = 'Post %d - %d' % (post_index, index)
-# 			else:
-# 				label = 'Post %d' % (post_index)
-# 			listitem = xbmcgui.ListItem(label)
-# 			url = tag['url']
-# 			if (url in urls):
-# 				continue
-# 			print 'URL:', url
-# 			plugin.addDirectoryItem(url=url, listitem=listitem)
-# 			index += 1
-# 		post_index += 1
-# 	plugin.endOfDirectory()
-
-# listitem = xbmcgui.ListItem(plugin.getSetting('username'), iconImage='http://velocityagency.com/wp-content/uploads/2013/08/go.jpg')
-# plugin.addDirectoryItem(url='http://velocityagency.com/wp-content/uploads/2013/08/go.jpg', listitem=listitem)
-# plugin.endOfDirectory()
+def recursiveCategoryImages(catId,page):
+	if(page == 0) :
+		categories = serverRequest('pwg.categories.getList',{'cat_id':catId})['categories']
+		del categories[0]
+		for catg in categories:
+			try:
+				thumb = catg['tn_url'];
+			except:
+				listitem = xbmcgui.ListItem('> '+catg['name'])
+			else:
+				listitem = xbmcgui.ListItem('> '+catg['name'],iconImage=thumb)
+			finally:		
+				plugin.addDirectoryItem(url='%s/cats/%s/0' % (plugin.root, catg['id']), listitem=listitem, isFolder=True)
+	populateImages(serverRequest('pwg.categories.getImages', {'cat_id':catId, 'page':page, 'per_page':plugin.getSetting('limit')}))	
 
 def allCategories():
 	types = serverRequest('pwg.categories.getList')['categories']
@@ -139,26 +130,38 @@ def allCategories():
 		args.append({'cat_id': oType['id']})
 	return args
 
+def die(alert):
+	if alert:
+		xbmcgui.Dialog().ok(__addonname__, 'There was a problem communicating with the server', 'Please check the configuration')
+	raise SystemExit(0)	
+
 if plugin.path:
 	split = plugin.path.split('/')
+	crntPage = 0
 	if(split[0] == 'tags') :
 		try:
-			typeId = split[1]
+			typeId0 = split[1]
+			crntPage = int(split[2])
 		except:
 			populateDirectory(serverRequest('pwg.tags.getList')['tags'])
 		else :
-			populateImages(serverRequest('pwg.tags.getImages',{'tag_id':typeId}))		
+			populateImages(serverRequest('pwg.tags.getImages', {'tag_id':typeId0,'page':crntPage,'per_page' : plugin.getSetting('limit')}))		
 	elif(split[0] == 'cats') :
 		try:
-			typeId = split[1]
+			typeId0 = split[1]
+			crntPage = int(split[2])
 		except:
 			populateDirectory(serverRequest('pwg.categories.getList')['categories'])
 		else :
-			recursiveCategoryImages(typeId)
+			recursiveCategoryImages(typeId0,crntPage)
 	elif(split[0] == 'recent'):
-		populateImages(serverRequest('pwg.categories.getImages',[{'order':'date_available DESC'}, allCategories()]))
+		try:
+			crntPage = int(split[1])
+		except:
+			pass
+		populateImages(serverRequest('pwg.categories.getImages', {'order':'date_available DESC', 'page':crntPage, 'per_page':plugin.getSetting('limit')}))
 	elif(split[0] == 'random'):
-		populateImages(serverRequest('pwg.categories.getImages',[{'order':'random'}, allCategories()]))
+		populateImages(serverRequest('pwg.categories.getImages', {'order':'random', 'per_page':plugin.getSetting('limit')}))
 	else :
 		home()		
 else:
