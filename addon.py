@@ -89,6 +89,20 @@ def populateImages(imgs):
 		plugin.addDirectoryItem(url=img['element_url'], listitem=listitem)
 	plugin.endOfDirectory()
 
+def recursiveCategoryImages(catId):
+	categories = serverRequest('pwg.categories.getList',{'cat_id':catId})['categories']
+	del categories[0]
+	for catg in categories:
+		try:
+			thumb = catg['tn_url'];
+		except:
+			listitem = xbmcgui.ListItem(catg['name'])
+		else:
+			listitem = xbmcgui.ListItem('> '+catg['name'],iconImage=thumb)
+		finally:		
+			plugin.addDirectoryItem(url='%s/cats/%s' % (plugin.root, catg['id']), listitem=listitem, isFolder=True)
+	populateImages(serverRequest('pwg.categories.getImages',{'cat_id':catId}))	
+
 # 	posts = dom['response']['posts']
 # 	if len(posts) >= 20:
 # 		thumbnail = 'http://api.tumblr.com/v2/blog/%s.tumblr.com/avatar/256' % tumblr
@@ -140,7 +154,7 @@ if plugin.path:
 		except:
 			populateDirectory(serverRequest('pwg.categories.getList')['categories'])
 		else :
-			populateImages(serverRequest('pwg.categories.getImages',{'cat_id':typeId}))
+			recursiveCategoryImages(typeId)
 	elif(split[0] == 'recent'):
 		populateImages(serverRequest('pwg.categories.getImages',[{'order':'date_available DESC'}, allCategories()]))
 	elif(split[0] == 'random'):
