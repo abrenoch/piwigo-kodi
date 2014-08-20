@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <strings>
-  <string id="33000">General</string>
+  <string id="33000">General Settings</string>
   <string id="33001">Server</string>
   <string id="33002">Username</string>
   <string id="33003">Password</string>
+  <string id="33004">View Settings</string>
+  <string id="33005">Max Page Size</string>
 </strings>
