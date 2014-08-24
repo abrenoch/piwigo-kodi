@@ -4,10 +4,15 @@ import sys, urllib, urllib2, cookielib, xbmcgui, xbmcaddon, simplejson as json
 __addon__       = xbmcaddon.Addon()
 __addonname__   = __addon__.getAddonInfo('name')
 __profile__ = xbmc.translatePath( __addon__.getAddonInfo('profile') ).decode("utf-8")
+__cwd__ = xbmc.translatePath( __addon__.getAddonInfo('path') ).decode("utf-8")
+__icon__ = __addon__.getAddonInfo('icon')
+
 # __settings__ = xbmcaddon.Addon(id='script.image.lastfm.slideshow')
 # __language__ = __settings__.getLocalizedString
 
 from xbmcapi import XBMCSourcePlugin
+
+#import resources.lib.modify_tags as modifyTags
 
 cookie_filename = __profile__+'pwg.cookie'
 cookieJar = cookielib.LWPCookieJar(cookie_filename)
@@ -24,12 +29,19 @@ def home():
 		'Recent Photos':'recent/0',
 		'Random Photos':'random/0',
 		'Browse by Categories':'cats',
-		'Browse by Tags':'tags'
+		'Browse by Tags':'tags',
+		# 'Saved Views':'views'
 	}
+
+	user = serverRequest('pwg.session.getStatus')
+
+	if (user['status'] == 'webmaster') or (user['status'] == 'admin') or (user['status'] == 'administrator') :
+		opts['Synchronize Server'] = 'sync'
+
 	for key in opts.iteritems():
-		print key[0]
 		listitem = xbmcgui.ListItem(key[0])
 		plugin.addDirectoryItem(url='%s/%s' % (plugin.root, key[1]), listitem=listitem, isFolder=True)
+
 	plugin.endOfDirectory()	
 
 def serverLogin():
@@ -99,6 +111,9 @@ def populateImages(imgs):
 	for img in imgs['images']:
 		listitem = xbmcgui.ListItem(img['name'],iconImage=img['derivatives']['thumb']['url'])
 		listitem.setInfo('pictures',{'date':img['date_available']})
+		commands = []
+		commands.append(( 'Modify Tags', 'runnerAdd', ))
+		listitem.addContextMenuItems( commands )
 		plugin.addDirectoryItem(url=img['element_url'], listitem=listitem)
 	if(int(plugin.getSetting('limit')) <= int(imgs['paging']['count'])) :
 		listitem = xbmcgui.ListItem('> Next %s' % (plugin.getSetting('limit')))
@@ -135,6 +150,33 @@ def die(alert):
 		xbmcgui.Dialog().ok(__addonname__, 'There was a problem communicating with the server', 'Please check the configuration')
 	raise SystemExit(0)	
 
+def syncServer():
+	url = '%s/admin.php?page=site_update&site=1' % (plugin.getSetting('server'))
+	values = {
+	    'sync': 'files',
+	    'display_info': 1,
+	    'add_to_caddie': 1,
+	    'privacy_level': 0,
+	    'simulate': 0,
+	    'subcats-included': 1,
+	    'submit': 1
+	}
+	data = urllib.urlencode(values)
+	req = urllib2.Request(url, data)
+	try:
+		conn = opener.open(req)
+	except:
+		xbmcgui.Dialog().ok(__addonname__, 'There was a problem synchronizing the server', 'Please check your logs')
+		die(False)
+	else:
+		response = conn.read()
+		conn.close()
+		if(response.find('scanning dirs')):
+			xbmc.executebuiltin('Notification(%s, Synchronization Successful, 5000, %s)'%(__addonname__, __icon__))
+		else:
+			xbmcgui.Dialog().ok(__addonname__, 'There was a problem synchronizing the server', 'Please check your logs')
+			die(False)
+
 if plugin.path:
 	split = plugin.path.split('/')
 	crntPage = 0
@@ -162,6 +204,12 @@ if plugin.path:
 		populateImages(serverRequest('pwg.categories.getImages', {'order':'date_available DESC', 'page':crntPage, 'per_page':plugin.getSetting('limit')}))
 	elif(split[0] == 'random'):
 		populateImages(serverRequest('pwg.categories.getImages', {'order':'random', 'per_page':plugin.getSetting('limit')}))
+	elif(split[0] == 'sync'):
+		syncServer()
+	elif(split[0] == 'views'):
+		xbmcgui.Window();
+		ui = modifyTags.modifyTagsWindow('piwigoTagDialog.xml' , __cwd__, "Default")
+		ui.doModal()
 	else :
 		home()		
 else:
