@@ -109,7 +109,10 @@ def populateDirectory(array):
 
 def populateImages(imgs):
 	for img in imgs['images']:
-		listitem = xbmcgui.ListItem(img['name'],iconImage=img['derivatives']['thumb']['url'])
+		ttl = img['name']
+		if(ttl == None) :
+			ttl = img['date_creation']
+		listitem = xbmcgui.ListItem(ttl,iconImage=img['derivatives']['thumb']['url'])
 		listitem.setInfo('pictures',{'date':img['date_available']})
 		commands = []
 		commands.append(( 'Modify Tags', 'runnerAdd', ))
