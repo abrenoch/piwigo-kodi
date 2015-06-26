@@ -1,0 +1,22 @@
+v0.0.4
+* f121b6c no message
+* 08775a6 fallback to date_available if date_created is not available
+* 5999367 Made the the label for images fallback the the date_creation if no name is available
+* 632895d 
+	-Added ability to check user credentials when display home items
+	-Adds 'sync' option if user is admin or webmaster
+	-Began adding objects for a 'tagging' interface
+
+v0.0.3 379b265
+* 379b265 dump version
+* 578daba 
+	-Removed unused imports Fixed browsing subcategories
+	-Fixed 'Random Images' option Images & subcategories now displayed in same view (only on first page)
+	-Added paging utilizing the 'max page size' setting
+	-No longer alerts when logging in as guest or without username Better error handling
+* 3311aff Added setting for max page size Made password field hidden
+* fcd65d4 categories now display contents & sub categories
+* 87eb648 some code clean up added support for 'recent images'
+
+v0.0.1
+* f159cc7 initial commit

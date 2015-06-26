@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.image.piwigo" name="Piwigo Browser" version="0.0.3"
-       provider-name="Dave Anderson">
+<addon id="plugin.image.piwigo" name="Piwigo Browser" version="0.0.4" provider-name="Dave Anderson, Francois Lacroix">
   <requires>
     <import addon="script.module.simplejson" version="2.0.10"/>
   </requires>
@@ -10,9 +9,9 @@
   <extension point="xbmc.addon.metadata">
     <platform>all</platform>
     <summary lang="en">View images from a piwigo server.</summary>
-    <description>
-      Browse catalogs from a piwigo server 
-    </description> 
+    <description>Browse catalogs from a piwigo server</description> 
     <license>GPL 2.0</license>
+    <website>http://piwigo.org/ext/extension_view.php?eid=770</website>
+    <source>https://github.com/abrenoch/piwigo-kodi</source>
   </extension>
 </addon>
