@@ -18,8 +18,8 @@ class XBMCAddon(object):
 
 class XBMCSourcePlugin(XBMCAddon):
 	def __init__(self):
-		self.root = re.match(r'plugin:\/\/[A-Za-z0-9_.-]+', sys.argv[0]).group(0)
-		XBMCAddon.__init__(self, self.root[8:])
+		self.root = re.match(r'plugin:\/\/([A-Za-z0-9_.-]+)', sys.argv[0]).group(1)
+		XBMCAddon.__init__(self, self.root)
 		self.path = sys.argv[0].replace(self.root,'').lstrip('/').split('?')[0]
 		self.query = {}
 		if '?' in sys.argv[2]:
