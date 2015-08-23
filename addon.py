@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import sys, urllib, urllib2, cookielib, xbmcgui, xbmcaddon, simplejson as json
+import os, sys, urllib, urllib2, cookielib, xbmcgui, xbmcaddon, simplejson as json
 
 __addon__       = xbmcaddon.Addon()
 __addonname__   = __addon__.getAddonInfo('name')
