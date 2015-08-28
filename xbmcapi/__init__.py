@@ -2,7 +2,6 @@ import os
 import re
 import sys
 
-
 import xbmc
 import xbmcgui
 import xbmcaddon
@@ -18,8 +17,8 @@ class XBMCAddon(object):
 
 class XBMCSourcePlugin(XBMCAddon):
 	def __init__(self):
-		self.root = re.match(r'plugin:\/\/([A-Za-z0-9_.-]+)', sys.argv[0]).group(1)
-		XBMCAddon.__init__(self, self.root)
+		self.root = re.match(r'plugin:\/\/[A-Za-z0-9_.-]+', sys.argv[0]).group(0)
+		XBMCAddon.__init__(self, self.root[9:])
 		self.path = sys.argv[0].replace(self.root,'').lstrip('/').split('?')[0]
 		self.query = {}
 		if '?' in sys.argv[2]:
@@ -37,4 +36,3 @@ class XBMCSourcePlugin(XBMCAddon):
 
 	def addDirectoryItem(self, url, listitem=None, isFolder=False):
 		return xbmcplugin.addDirectoryItem(handle=self.id, url=url, listitem=listitem, isFolder=isFolder)
-
