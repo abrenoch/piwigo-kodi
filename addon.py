@@ -14,12 +14,7 @@ __profile__ = xbmc.translatePath( __addon__.getAddonInfo('profile') ).decode("ut
 __cwd__ = xbmc.translatePath( __addon__.getAddonInfo('path') ).decode("utf-8")
 __icon__ = __addon__.getAddonInfo('icon')
 
-# __settings__ = xbmcaddon.Addon(id='script.image.lastfm.slideshow')
-# __language__ = __settings__.getLocalizedString
-
 from xbmcapi import XBMCSourcePlugin
-
-#import resources.lib.modify_tags as modifyTags
 
 cookie_filename = __profile__+'pwg.cookie'
 cookieJar = cookielib.LWPCookieJar(cookie_filename)
