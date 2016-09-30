@@ -35,9 +35,10 @@ def home():
 	opts = {
 		'Recent Photos':'recent/0',
 		'Random Photos':'random/0',
+		'Top Rated Photos':'rated/0',
 		'Browse by Categories':'cats',
-		'Browse by Tags':'tags',
-		# 'Saved Views':'views'
+		'Browse by Tags':'tags'
+		#'Saved Views':'views'
 	}
 
 	user = serverRequest('pwg.session.getStatus')
@@ -218,6 +219,8 @@ if plugin.path:
 		populateImages(serverRequest('pwg.categories.getImages', {'order':'date_available DESC', 'page':crntPage, 'per_page':plugin.getSetting('limit')}))
 	elif(split[0] == 'random'):
 		populateImages(serverRequest('pwg.categories.getImages', {'order':'random', 'per_page':plugin.getSetting('limit')}))
+	elif(split[0] == 'rated'):
+		populateImages(serverRequest('pwg.categories.getImages', {'order':'rating_score desc', 'page':crntPage, 'per_page':plugin.getSetting('limit'), 'f_min_rate':0, 'f_max_rate':5}))
 	elif(split[0] == 'sync'):
 		syncServer()
 	elif(split[0] == 'views'):
