@@ -32,7 +32,8 @@ def home():
 		'Random Photos':'random/0',
 		'Top Rated Photos':'rated/0',
 		'Browse by Categories':'cats',
-		'Browse by Tags':'tags'
+		'Browse by Tags':'tags',
+		'Search':'search'
 		#'Saved Views':'views'
 	}
 
@@ -116,9 +117,9 @@ def populateImages(imgs):
 			if(img['date_creation'] == None) :
 				ttl = img['date_available']
 			else :
-				ttl = img['date_creation']	
+				ttl = img['date_creation']
 		else :
-			ttl = img['name']		
+			ttl = img['name']
 		listitem = xbmcgui.ListItem(ttl,iconImage=img['derivatives']['thumb']['url'])
 		listitem.setInfo('pictures',{'date':img['date_available']})
 		commands = []
@@ -126,12 +127,30 @@ def populateImages(imgs):
 		listitem.addContextMenuItems( commands )
 		plugin.addDirectoryItem(url=img['element_url'], listitem=listitem)
 	if(int(plugin.getSetting('limit')) <= int(imgs['paging']['count'])) :
-		listitem = xbmcgui.ListItem('> Next %s' % (plugin.getSetting('limit')))
+		nextString = '> Next'
+		nextCount = plugin.getSetting('limit')
+		try:
+			imgCount = (imgs['paging']['page'] + 1)* imgs['paging']['per_page']
+			remainingImageCount = imgs['paging']['total_count'] - imgCount
+			if(remainingImageCount < int(plugin.getSetting('limit'))):
+				nextCount = remainingImageCount
+		except:
+			pass
+		try:
+			nextString += ' %s (%s Total)' % (nextCount, imgs['paging']['total_count'])
+		except:
+			nextString += ' %s' % (nextCount)
+		listitem = xbmcgui.ListItem(nextString)
 		newpath = plugin.path.split('/')
-		del newpath[-1]
+		try:
+			if(int(newpath[-1])):
+				del newpath[-1]
+		except:
+			pass
 		newpathCon = '/'.join(newpath)
 		plugin.addDirectoryItem(url='%s/%s/%s' % (plugin.root, newpathCon, (int(imgs['paging']['page']) + 1)), listitem=listitem, isFolder=True)
 	plugin.endOfDirectory()
+
 
 def recursiveCategoryImages(catId,page):
 	if(page == 0) :
@@ -220,8 +239,23 @@ if plugin.path:
 		syncServer()
 	elif(split[0] == 'views'):
 		xbmcgui.Window();
-		ui = modifyTags.modifyTagsWindow('piwigoTagDialog.xml' , __cwd__, "Default")
+		ui = modifyTags.modifyTagsWindow('piwigoTagDialog.xml' , __cwd__, 'Default')
 		ui.doModal()
+	elif(split[0] == 'search'):
+		try:
+			crntPage = int(split[2])
+		except:
+			pass
+		if(crntPage > 0):
+			populateImages(serverRequest('pwg.images.search', {'query':split[1], 'per_page':plugin.getSetting('limit'), 'page':crntPage}))
+		else:
+			keyboard = xbmc.Keyboard('', 'Type your name', False)
+			keyboard.doModal()
+			if keyboard.isConfirmed() and keyboard.getText() != '':
+				plugin.path += '/%s' % (keyboard.getText())
+				populateImages(serverRequest('pwg.images.search', {'query':keyboard.getText(), 'per_page':plugin.getSetting('limit'), 'page':crntPage}))
+			else:
+				xbmcgui.Dialog().ok(__addonname__, 'Search input can not be blank')
 	else :
 		home()		
 else:
