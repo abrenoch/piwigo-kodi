@@ -29,6 +29,11 @@ Help me improve the Kodi add-on, rate my [plugin](http://piwigo.org/ext/extensio
 
 You can follow the discussion on the [Kodi Forum](http://forum.kodi.tv/showthread.php?tid=202393) or on the [Piwigo Forum](http://piwigo.org/forum/viewtopic.php?pid=159813)
 
+Contribute
+------
+
+If you would like to contribute translations please do so on [getlocalization.com](https://www.getlocalization.com/piwigokodi/)
+
 Thanks
 ------
 
