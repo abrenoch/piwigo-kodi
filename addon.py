@@ -28,19 +28,18 @@ plugin = XBMCSourcePlugin()
 
 def home():
 	opts = {
-		'Recent Photos':'recent/0',
-		'Random Photos':'random/0',
-		'Top Rated Photos':'rated/0',
-		'Browse by Categories':'cats',
-		'Browse by Tags':'tags',
-		'Search':'search'
-		#'Saved Views':'views'
+		__addon__.getLocalizedString(33100):'recent/0',
+		__addon__.getLocalizedString(33101):'random/0',
+		__addon__.getLocalizedString(33102):'rated/0',
+		__addon__.getLocalizedString(33103):'cats',
+		__addon__.getLocalizedString(33104):'tags',
+		__addon__.getLocalizedString(33105):'search'
 	}
 
 	user = serverRequest('pwg.session.getStatus')
 
 	if (user['status'] == 'webmaster') or (user['status'] == 'admin') or (user['status'] == 'administrator') :
-		opts['Synchronize Server'] = 'sync'
+		opts[__addon__.getLocalizedString(33114)] = 'sync'
 
 	for key in opts.iteritems():
 		listitem = xbmcgui.ListItem(key[0])
@@ -74,7 +73,7 @@ def serverLogin():
 				return True
 			else:
 				if(plugin.getSetting('username') != 'guest' and plugin.getSetting('username') != '') :
-					xbmcgui.Dialog().ok(__addonname__, 'Username and/or password incorrect', 'Please check the configuration')
+					xbmcgui.Dialog().ok(__addonname__, __addon__.getLocalizedString(33106), __addon__.getLocalizedString(33107))
 					die(False)
 			pass
 
@@ -96,7 +95,7 @@ def serverRequest(method,extraData = []):
 	if(response['stat'] == 'ok') :
 		return response['result']
 	else :
-		xbmcgui.Dialog().ok(__addonname__, 'There was an error retrieving data', 'Method: '+method, response['message'])
+		xbmcgui.Dialog().ok(__addonname__, __addon__.getLocalizedString(33109), '%s: %s' % (__addon__.getLocalizedString(33110), method), response['message'])
 		die(False)
 
 def populateDirectory(array):
@@ -123,11 +122,11 @@ def populateImages(imgs):
 		listitem = xbmcgui.ListItem(ttl,iconImage=img['derivatives']['thumb']['url'])
 		listitem.setInfo('pictures',{'date':img['date_available']})
 		commands = []
-		commands.append(( 'Modify Tags', 'runnerAdd', ))
+		# commands.append(( 'Modify Tags', 'runnerAdd', ))
 		listitem.addContextMenuItems( commands )
 		plugin.addDirectoryItem(url=img['element_url'], listitem=listitem)
 	if(int(plugin.getSetting('limit')) <= int(imgs['paging']['count'])) :
-		nextString = '> Next'
+		nextString = '> %s' % (__addon__.getLocalizedString(33115))
 		nextCount = plugin.getSetting('limit')
 		try:
 			imgCount = (imgs['paging']['page'] + 1)* imgs['paging']['per_page']
@@ -137,7 +136,7 @@ def populateImages(imgs):
 		except:
 			pass
 		try:
-			nextString += ' %s (%s Total)' % (nextCount, imgs['paging']['total_count'])
+			nextString += ' %s (%s %s)' % (nextCount, imgs['paging']['total_count'], __addon__.getLocalizedString(33116))
 		except:
 			nextString += ' %s' % (nextCount)
 		listitem = xbmcgui.ListItem(nextString)
@@ -176,7 +175,7 @@ def allCategories():
 
 def die(alert):
 	if alert:
-		xbmcgui.Dialog().ok(__addonname__, 'There was a problem communicating with the server', 'Please check the configuration')
+		xbmcgui.Dialog().ok(__addonname__, __addon__.getLocalizedString(33111), __addon__.getLocalizedString(33107))
 	raise SystemExit(0)	
 
 def syncServer():
@@ -195,15 +194,15 @@ def syncServer():
 	try:
 		conn = opener.open(req)
 	except:
-		xbmcgui.Dialog().ok(__addonname__, 'There was a problem synchronizing the server', 'Please check your logs')
+		xbmcgui.Dialog().ok(__addonname__, __addon__.getLocalizedString(33112), __addon__.getLocalizedString(33108))
 		die(False)
 	else:
 		response = conn.read()
 		conn.close()
 		if(response.find('scanning dirs')):
-			xbmc.executebuiltin('Notification(%s, Synchronization Successful, 5000, %s)'%(__addonname__, __icon__))
+			xbmc.executebuiltin('Notification(%s, %s, 5000, %s)'%(__addonname__, __addon__.getLocalizedString(33117), __icon__))
 		else:
-			xbmcgui.Dialog().ok(__addonname__, 'There was a problem synchronizing the server', 'Please check your logs')
+			xbmcgui.Dialog().ok(__addonname__, __addon__.getLocalizedString(33112), __addon__.getLocalizedString(33108))
 			die(False)
 
 if plugin.path:
@@ -249,13 +248,13 @@ if plugin.path:
 		if(crntPage > 0):
 			populateImages(serverRequest('pwg.images.search', {'query':split[1], 'per_page':plugin.getSetting('limit'), 'page':crntPage}))
 		else:
-			keyboard = xbmc.Keyboard('', 'Type your name', False)
+			keyboard = xbmc.Keyboard('', __addon__.getLocalizedString(33118), False)
 			keyboard.doModal()
 			if keyboard.isConfirmed() and keyboard.getText() != '':
 				plugin.path += '/%s' % (keyboard.getText())
 				populateImages(serverRequest('pwg.images.search', {'query':keyboard.getText(), 'per_page':plugin.getSetting('limit'), 'page':crntPage}))
 			else:
-				xbmcgui.Dialog().ok(__addonname__, 'Search input can not be blank')
+				xbmcgui.Dialog().ok(__addonname__, __addon__.getLocalizedString(33113))
 	else :
 		home()		
 else:
