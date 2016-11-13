@@ -6,4 +6,23 @@
   <string id="33003">Password</string>
   <string id="33004">View Settings</string>
   <string id="33005">Max Page Size</string>
+  <string id="33100">Recent Photos</string>
+  <string id="33101">Random Photos</string>
+  <string id="33102">Top Rated Photos</string>
+  <string id="33103">Browse by Categories</string>
+  <string id="33104">Browse by Tags</string>
+  <string id="33105">Search</string>
+  <string id="33106">Username and/or password incorrect</string>
+  <string id="33107">Please check the configuration</string>
+  <string id="33108">Please check your logs</string>
+  <string id="33109">There was an error retrieving data</string>
+  <string id="33110">Method</string>
+  <string id="33111">There was a problem communicating with the server</string>
+  <string id="33112">There was a problem synchronizing the server</string>
+  <string id="33113">Search input can not be blank</string>
+  <string id="33114">Synchronize Server</string>
+  <string id="33115">Next Page</string>
+  <string id="33116">Total</string>
+  <string id="33117">Synchronization Successful</string>
+  <string id="33118">Enter a search string</string>
 </strings>
