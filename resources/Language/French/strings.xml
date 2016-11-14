@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<strings>  
+  <string id="33000">Paramètres généraux</string>  
+  <string id="33001">Serveur</string>  
+  <string id="33002">Nom d'utilisateur</string>  
+  <string id="33003">Mot de passe</string>  
+  <string id="33004">Options d'affichage</string>  
+  <string id="33005">Qté Max Par Page</string>  
+  <string id="33100">Photos Récentes</string>  
+  <string id="33101">Photos Aléatoires</string>  
+  <string id="33102">Photos Les Mieux Notées</string>  
+  <string id="33103">Naviguer par Catégories</string>  
+  <string id="33104">Naviguer par Étiquettes</string>  
+  <string id="33105">Recherche</string>  
+  <string id="33106">Nom d'utilisateur et/ou mot de passe incorrect(s)</string>  
+  <string id="33107">Merci de vérifier votre configuration</string>  
+  <string id="33108">Merci de vérifier vos logs</string>  
+  <string id="33109">Il y a eu une erreur lors de la réception des données</string>  
+  <string id="33110">Méthode</string>  
+  <string id="33111">Il y a eu un problème de communication avec le serveur</string>  
+  <string id="33112">Il y a eu un problème de synchronisation avec le serveur</string>  
+  <string id="33113">Le champ de recherche ne peut pas être vide</string>  
+  <string id="33114">Synchroniser avec le Serveur</string>  
+  <string id="33115">Page Suivante</string>  
+  <string id="33116">Total</string>  
+  <string id="33117">Synchronisation Réussie</string>  
+  <string id="33118">Entrez un élément de recherche</string>
+</strings>
