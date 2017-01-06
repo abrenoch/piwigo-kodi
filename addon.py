@@ -233,6 +233,10 @@ if plugin.path:
 	elif(split[0] == 'random'):
 		populateImages(serverRequest('pwg.categories.getImages', {'order':'random', 'per_page':plugin.getSetting('limit')}))
 	elif(split[0] == 'rated'):
+		try:
+			crntPage = int(split[2])
+		except:
+			pass
 		populateImages(serverRequest('pwg.categories.getImages', {'order':'rating_score desc', 'page':crntPage, 'per_page':plugin.getSetting('limit'), 'f_min_rate':0, 'f_max_rate':5}))
 	elif(split[0] == 'sync'):
 		syncServer()
