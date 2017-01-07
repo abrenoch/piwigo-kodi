@@ -142,7 +142,7 @@ def populateImages(imgs):
 		listitem = xbmcgui.ListItem(nextString)
 		newpath = plugin.path.split('/')
 		try:
-			if(int(newpath[-1])):
+			if(int(newpath[-1]) >= 0):
 				del newpath[-1]
 		except:
 			pass
@@ -181,13 +181,13 @@ def die(alert):
 def syncServer():
 	url = '%s/admin.php?page=site_update&site=1' % (plugin.getSetting('server'))
 	values = {
-	    'sync': 'files',
-	    'display_info': 1,
-	    'add_to_caddie': 1,
-	    'privacy_level': 0,
-	    'simulate': 0,
-	    'subcats-included': 1,
-	    'submit': 1
+		'sync': 'files',
+		'display_info': 1,
+		'add_to_caddie': 1,
+		'privacy_level': 0,
+		'simulate': 0,
+		'subcats-included': 1,
+		'submit': 1
 	}
 	data = urllib.urlencode(values)
 	req = urllib2.Request(url, data)
@@ -234,7 +234,7 @@ if plugin.path:
 		populateImages(serverRequest('pwg.categories.getImages', {'order':'random', 'per_page':plugin.getSetting('limit')}))
 	elif(split[0] == 'rated'):
 		try:
-			crntPage = int(split[2])
+			crntPage = int(split[1])
 		except:
 			pass
 		populateImages(serverRequest('pwg.categories.getImages', {'order':'rating_score desc', 'page':crntPage, 'per_page':plugin.getSetting('limit'), 'f_min_rate':0, 'f_max_rate':5}))
@@ -260,7 +260,7 @@ if plugin.path:
 			else:
 				xbmcgui.Dialog().ok(__addonname__, __addon__.getLocalizedString(33113))
 	else :
-		home()		
+		home()
 else:
 	serverLogin()
 	home()
