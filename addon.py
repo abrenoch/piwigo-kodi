@@ -26,20 +26,46 @@ opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookieJar))
 opener.addheaders = [('User-Agent', 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2.11) Gecko/20101012 Firefox/3.6.11'),]
 plugin = XBMCSourcePlugin()
 
-def home():
-	opts = {
-		__addon__.getLocalizedString(33100):'recent/0',
-		__addon__.getLocalizedString(33101):'random/0',
-		__addon__.getLocalizedString(33102):'rated/0',
-		__addon__.getLocalizedString(33103):'cats',
-		__addon__.getLocalizedString(33104):'tags',
-		__addon__.getLocalizedString(33105):'search'
-	}
+def checkMethods():
+	opts = [
+		{'dependancies': ['pwg.categories.getImages'], 'urivar': 'recent', 'labelid': 33100, 'adminonly': False},
+		{'dependancies': ['pwg.categories.getImages'], 'urivar': 'random', 'labelid': 33101, 'adminonly': False},
+		{'dependancies': ['pwg.categories.getImages'], 'urivar': 'rated', 'labelid': 33102, 'adminonly': False},
+		{'dependancies': ['pwg.categories.getList'], 'urivar': 'cats', 'labelid': 33103, 'adminonly': False},
+		{'dependancies': ['pwg.tags.getList', 'pwg.tags.getImages'], 'urivar': 'tags', 'labelid': 33104, 'adminonly': False},
+		{'dependancies': ['pwg.collections.getList', 'pwg.collections.getImages'], 'urivar': 'collection', 'labelid': 33119, 'adminonly': False},
+		{'dependancies': ['pwg.users.getFavorites'], 'urivar': 'favorites', 'labelid': 33120, 'adminonly': False},
+		{'dependancies': ['pwg.images.search'], 'urivar': 'search', 'labelid': 33105, 'adminonly': False},
+		{'dependancies': False, 'urivar': 'sync', 'labelid': 33114, 'adminonly': True},
+	]
 
+	returnopts = {}
 	user = serverRequest('pwg.session.getStatus')
+	methods = serverRequest('reflection.getMethodList')['methods']
 
-	if (user['status'] == 'webmaster') or (user['status'] == 'admin') or (user['status'] == 'administrator') :
-		opts[__addon__.getLocalizedString(33114)] = 'sync'
+	for opt in opts :
+		addOpt = False
+		if opt['dependancies'] != False :
+			approved = 0
+			for optDep in opt['dependancies'] :
+				for method in methods :
+					if method == optDep :
+						approved += 1
+						break
+			if len(opt['dependancies']) <= approved :
+				addOpt = True
+		else :
+			addOpt = True
+		if opt['adminonly'] == True and (user['status'] != 'webmaster' and user['status'] != 'admin' and user['status'] != 'administrator') :
+			addOpt = False
+
+		if addOpt == True:
+			returnopts[__addon__.getLocalizedString(opt['labelid'])] = opt['urivar']
+
+	return returnopts
+
+def home():
+	opts = checkMethods()
 
 	for key in opts.iteritems():
 		listitem = xbmcgui.ListItem(key[0])
@@ -224,6 +250,14 @@ if plugin.path:
 			populateDirectory(serverRequest('pwg.categories.getList')['categories'])
 		else :
 			recursiveCategoryImages(typeId0,crntPage)
+	elif(split[0] == 'collection') :
+		try:
+			typeId0 = split[1]
+			crntPage = int(split[2])
+		except:
+			populateDirectory(serverRequest('pwg.collections.getList', {'page':0, 'per_page':plugin.getSetting('limit')})['collections'])
+		else :
+			populateImages(serverRequest('pwg.collections.getImages', {'col_id':typeId0, 'page':crntPage, 'per_page':plugin.getSetting('limit')}))
 	elif(split[0] == 'recent'):
 		try:
 			crntPage = int(split[1])
@@ -238,6 +272,12 @@ if plugin.path:
 		except:
 			pass
 		populateImages(serverRequest('pwg.categories.getImages', {'order':'rating_score desc', 'page':crntPage, 'per_page':plugin.getSetting('limit'), 'f_min_rate':0, 'f_max_rate':5}))
+	elif(split[0] == 'favorites'):
+		try:
+			crntPage = int(split[1])
+		except:
+			pass
+		populateImages(serverRequest('pwg.users.getFavorites', {'page':crntPage, 'per_page':plugin.getSetting('limit')}))
 	elif(split[0] == 'sync'):
 		syncServer()
 	elif(split[0] == 'views'):
