@@ -23,6 +23,7 @@ if os.access(cookie_filename, os.F_OK):
 	cookieJar.load(ignore_discard=True)
 
 opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookieJar))
+opener.add_handler(urllib2.HTTPSHandler())
 opener.addheaders = [('User-Agent', 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2.11) Gecko/20101012 Firefox/3.6.11'),]
 plugin = XBMCSourcePlugin()
 
@@ -150,7 +151,11 @@ def populateImages(imgs):
 		commands = []
 		# commands.append(( 'Modify Tags', 'runnerAdd', ))
 		listitem.addContextMenuItems( commands )
-		plugin.addDirectoryItem(url=img['element_url'], listitem=listitem)
+		try:
+			thumb = img['element_url']
+		except:
+			thumb = img['derivatives']['xxlarge']['url']
+		plugin.addDirectoryItem(url=thumb, listitem=listitem)
 	if(int(plugin.getSetting('limit')) <= int(imgs['paging']['count'])) :
 		nextString = '> %s' % (__addon__.getLocalizedString(33115))
 		nextCount = plugin.getSetting('limit')
