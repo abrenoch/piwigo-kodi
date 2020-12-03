@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
     <category label="33000">
-        <setting label="33001" type="text" id="server" default="http://www.piwigo.org/demo"/>
+        <setting label="33001" type="text" id="server" default="http://fr.piwigo.org/demo"/>
         <setting label="33002" type="text" id="username" default="guest"/>
         <setting label="33003" type="text" id="password" option="hidden" default=""/>
         <setting label="33004" type="lsep"/>
