@@ -36,7 +36,7 @@ def checkMethods():
 		{'dependancies': ['pwg.categories.getList'], 'urivar': 'cats', 'labelid': 43103, 'adminonly': False},
 		{'dependancies': ['pwg.tags.getList', 'pwg.tags.getImages'], 'urivar': 'tags', 'labelid': 43104, 'adminonly': False},
 		{'dependancies': ['pwg.collections.getList', 'pwg.collections.getImages'], 'urivar': 'collection', 'labelid': 43119, 'adminonly': False},
-		{'dependancies': ['pwg.users.getFavorites'], 'urivar': 'favorites', 'labelid': 43120, 'adminonly': False},
+		{'dependancies': ['pwg.users.favorites.getList'], 'urivar': 'favorites', 'labelid': 43120, 'adminonly': False},
 		{'dependancies': ['pwg.images.search'], 'urivar': 'search', 'labelid': 43105, 'adminonly': False},
 		{'dependancies': False, 'urivar': 'sync', 'labelid': 43114, 'adminonly': True},
 	]
@@ -62,8 +62,7 @@ def checkMethods():
 			addOpt = False
 
 		if addOpt == True:
-			# returnopts[localize(opt['labelid'])] = opt['urivar']
-			returnopts[opt['urivar']] = opt['urivar']
+			returnopts[localize(opt['labelid'])] = opt['urivar']
 
 	return returnopts
 
@@ -286,7 +285,7 @@ if plugin.path:
 			crntPage = int(split[1])
 		except:
 			pass
-		populateImages(serverRequest('pwg.users.getFavorites', {'page':crntPage, 'per_page':plugin.getSetting('limit')}))
+		populateImages(serverRequest('pwg.users.favorites.getList', {'page':crntPage, 'per_page':plugin.getSetting('limit')}))
 	elif(split[0] == 'sync'):
 		syncServer()
 	# elif(split[0] == 'views'):
