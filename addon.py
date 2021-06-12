@@ -2,7 +2,6 @@
 import os
 import sys
 import urllib
-import urllib.request
 import http.cookiejar
 import xbmcgui
 import xbmcaddon
@@ -152,13 +151,12 @@ def populateImages(imgs):
 		listitem.setArt(img['derivatives']['thumb']['url'])
 		listitem.setInfo('pictures',{'date':img['date_available']})
 		commands = []
-		# commands.append(( 'Modify Tags', 'runnerAdd', ))
 		listitem.addContextMenuItems( commands )
 		try:
 			thumb = img['element_url']
 		except:
 			thumb = img['derivatives']['xxlarge']['url']
-		plugin.addDirectoryItem(url=thumb, listitem=listitem)
+		plugin.addDirectoryItem(url=urllib.parse.quote(thumb, safe='/:?&'), listitem=listitem)
 	if(int(plugin.getSetting('limit')) <= int(imgs['paging']['count'])) :
 		nextString = '> %s' % (localize(43115))
 		nextCount = plugin.getSetting('limit')
@@ -190,12 +188,11 @@ def recursiveCategoryImages(catId,page):
 		categories = serverRequest('pwg.categories.getList',{'cat_id':catId})['categories']
 		del categories[0]
 		for catg in categories:
+			listitem = xbmcgui.ListItem('> '+catg['name'])
 			try:
-				thumb = catg['tn_url'];
+				listitem.setArt({'icon': catg['tn_url']})
 			except:
-				listitem = xbmcgui.ListItem('> '+catg['name'])
-			else:
-				listitem = xbmcgui.ListItem('> '+catg['name'],iconImage=thumb)
+				pass
 			finally:		
 				plugin.addDirectoryItem(url='%s/cats/%s/0' % (plugin.root, catg['id']), listitem=listitem, isFolder=True)
 	populateImages(serverRequest('pwg.categories.getImages', {'cat_id':catId, 'page':page, 'per_page':plugin.getSetting('limit')}))	
