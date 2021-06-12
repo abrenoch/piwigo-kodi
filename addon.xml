@@ -13,5 +13,8 @@
     <license>GPL 2.0</license>
     <website>http://piwigo.org/ext/extension_view.php?eid=770</website>
     <source>https://github.com/abrenoch/piwigo-kodi</source>
+    <assets>
+        <icon>resources/icon.png</icon>
+    </assets>
   </extension>
 </addon>
