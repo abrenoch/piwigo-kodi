@@ -2,15 +2,16 @@
 import os
 import sys
 import urllib
+from urllib.parse import quote_plus
 import http.cookiejar
 import xbmcgui
 import xbmcaddon
+import xbmcvfs
 import simplejson as json
 
 __addon__       = xbmcaddon.Addon()
 __addonname__   = __addon__.getAddonInfo('name')
-__profile__ = xbmc.translatePath( __addon__.getAddonInfo('profile') )
-# __cwd__ = xbmc.translatePath( __addon__.getAddonInfo('path') )
+__profile__ = xbmcvfs.translatePath( __addon__.getAddonInfo('profile') )
 __icon__ = __addon__.getAddonInfo('icon')
 localize = __addon__.getLocalizedString
 
@@ -26,6 +27,9 @@ opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cookieJa
 opener.add_handler(urllib.request.HTTPSHandler())
 opener.addheaders = [('User-Agent', 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2.11) Gecko/20101012 Firefox/3.6.11'),]
 plugin = XBMCSourcePlugin()
+
+def cleanURL(src):
+	return urllib.parse.quote(src, safe='/:?&')
 
 def checkMethods():
 	opts = [
@@ -128,12 +132,12 @@ def serverRequest(method,extraData = []):
 def populateDirectory(array):
 	for obj in array:
 		try:
-			thumb = obj['tn_url'];
+			thumb = cleanURL(obj['tn_url'])
 		except:
 			listitem = xbmcgui.ListItem(obj['name'])
 		else:
 			listitem = xbmcgui.ListItem(obj['name'])
-			listitem.setArt(thumb)
+			listitem.setArt({'thumb':thumb, 'icon':thumb})
 		finally:		
 			plugin.addDirectoryItem(url='%s/%s/%s/0' % (plugin.root, plugin.path, obj['id']), listitem=listitem, isFolder=True)
 	plugin.endOfDirectory()
@@ -148,15 +152,15 @@ def populateImages(imgs):
 		else :
 			ttl = img['name']
 		listitem = xbmcgui.ListItem(ttl)
-		listitem.setArt(img['derivatives']['thumb']['url'])
+		listitem.setArt({ 'thumb' : cleanURL(img['derivatives']['thumb']['url']) })
 		listitem.setInfo('pictures',{'date':img['date_available']})
 		commands = []
 		listitem.addContextMenuItems( commands )
 		try:
-			thumb = img['element_url']
+			src = img['element_url']
 		except:
-			thumb = img['derivatives']['xxlarge']['url']
-		plugin.addDirectoryItem(url=urllib.parse.quote(thumb, safe='/:?&'), listitem=listitem)
+			src = img['derivatives']['xxlarge']['url']
+		plugin.addDirectoryItem(url=cleanURL(src), listitem=listitem)
 	if(int(plugin.getSetting('limit')) <= int(imgs['paging']['count'])) :
 		nextString = '> %s' % (localize(43115))
 		nextCount = plugin.getSetting('limit')
@@ -190,19 +194,13 @@ def recursiveCategoryImages(catId,page):
 		for catg in categories:
 			listitem = xbmcgui.ListItem('> '+catg['name'])
 			try:
-				listitem.setArt({'icon': catg['tn_url']})
+				thumb = cleanURL(catg['tn_url'])
+				listitem.setArt({'icon': thumb, 'thumb': thumb})
 			except:
 				pass
 			finally:		
 				plugin.addDirectoryItem(url='%s/cats/%s/0' % (plugin.root, catg['id']), listitem=listitem, isFolder=True)
 	populateImages(serverRequest('pwg.categories.getImages', {'cat_id':catId, 'page':page, 'per_page':plugin.getSetting('limit')}))	
-
-def allCategories():
-	types = serverRequest('pwg.categories.getList')['categories']
-	args = []
-	for oType in types:
-		args.append({'cat_id': oType['id']})
-	return args
 
 def die(alert):
 	if alert:

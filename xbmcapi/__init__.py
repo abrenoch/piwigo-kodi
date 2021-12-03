@@ -1,11 +1,10 @@
 import os
 import re
 import sys
-
-import xbmc
-import xbmcgui
 import xbmcaddon
 import xbmcplugin
+import xbmcvfs
+
 
 class XBMCAddon(object):
 	def __init__(self, name):
@@ -13,7 +12,7 @@ class XBMCAddon(object):
 		self.settings = xbmcaddon.Addon(id=name)
 		self.anguage = self.settings.getLocalizedString
 		self.home = self.settings.getAddonInfo('path')
-		self.icon = xbmc.translatePath( os.path.join( self.home, 'icon.png' ) )
+		self.icon = xbmcvfs.translatePath( os.path.join( self.home, 'icon.png' ) )
 
 class XBMCSourcePlugin(XBMCAddon):
 	def __init__(self):
