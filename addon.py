@@ -29,15 +29,15 @@ plugin = XBMCSourcePlugin()
 
 def checkMethods():
 	opts = [
-		{'dependancies': ['pwg.categories.getImages'], 'urivar': 'recent', 'labelid': 43100, 'adminonly': False},
-		{'dependancies': ['pwg.categories.getImages'], 'urivar': 'random', 'labelid': 43101, 'adminonly': False},
-		{'dependancies': ['pwg.categories.getImages'], 'urivar': 'rated', 'labelid': 43102, 'adminonly': False},
-		{'dependancies': ['pwg.categories.getList'], 'urivar': 'cats', 'labelid': 43103, 'adminonly': False},
-		{'dependancies': ['pwg.tags.getList', 'pwg.tags.getImages'], 'urivar': 'tags', 'labelid': 43104, 'adminonly': False},
-		{'dependancies': ['pwg.collections.getList', 'pwg.collections.getImages'], 'urivar': 'collection', 'labelid': 43119, 'adminonly': False},
-		{'dependancies': ['pwg.users.favorites.getList'], 'urivar': 'favorites', 'labelid': 43120, 'adminonly': False},
-		{'dependancies': ['pwg.images.search'], 'urivar': 'search', 'labelid': 43105, 'adminonly': False},
-		{'dependancies': False, 'urivar': 'sync', 'labelid': 43114, 'adminonly': True},
+		{'dependencies': ['pwg.categories.getImages'], 'urivar': 'recent', 'labelid': 43100, 'adminonly': False},
+		{'dependencies': ['pwg.categories.getImages'], 'urivar': 'random', 'labelid': 43101, 'adminonly': False},
+		{'dependencies': ['pwg.categories.getImages'], 'urivar': 'rated', 'labelid': 43102, 'adminonly': False},
+		{'dependencies': ['pwg.categories.getList'], 'urivar': 'cats', 'labelid': 43103, 'adminonly': False},
+		{'dependencies': ['pwg.tags.getList', 'pwg.tags.getImages'], 'urivar': 'tags', 'labelid': 43104, 'adminonly': False},
+		{'dependencies': ['pwg.collections.getList', 'pwg.collections.getImages'], 'urivar': 'collection', 'labelid': 43119, 'adminonly': False},
+		{'dependencies': ['pwg.users.favorites.getList'], 'urivar': 'favorites', 'labelid': 43120, 'adminonly': False},
+		{'dependencies': ['pwg.images.search'], 'urivar': 'search', 'labelid': 43105, 'adminonly': False},
+		{'dependencies': False, 'urivar': 'sync', 'labelid': 43114, 'adminonly': True},
 	]
 
 	returnopts = {}
@@ -46,14 +46,14 @@ def checkMethods():
 
 	for opt in opts :
 		addOpt = False
-		if opt['dependancies'] != False :
+		if opt['dependencies'] != False :
 			approved = 0
-			for optDep in opt['dependancies'] :
+			for optDep in opt['dependencies'] :
 				for method in methods :
 					if method == optDep :
 						approved += 1
 						break
-			if len(opt['dependancies']) <= approved :
+			if len(opt['dependencies']) <= approved :
 				addOpt = True
 		else :
 			addOpt = True
