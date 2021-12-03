@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
     <category label="43000">
-        <setting label="43001" type="text" id="server" default="https://piwigo.org/demo"/>
-        <setting label="43002" type="text" id="username" default="guest"/>
+        <setting label="43001" type="text" id="server" default="https://demo1.piwigo.com"/>
+        <setting label="43002" type="text" id="username" default=""/>
         <setting label="43003" type="text" id="password" option="hidden" default=""/>
         <setting label="43004" type="lsep"/>
         <setting label="43005" type="slider" id="limit" default="20" range="10,10,100" option="int" />
