@@ -13,91 +13,91 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgctxt "#43000"
-msgid "General Settings"
+msgid "Paramètres généraux"
 msgstr ""
 
 msgctxt "#43001"
-msgid "Server"
+msgid "Serveur"
 msgstr ""
 
 msgctxt "#43002"
-msgid "Username"
+msgid "Nom d'utilisateur"
 msgstr ""
 
 msgctxt "#43003"
-msgid "Password"
+msgid "Mot de passe"
 msgstr ""
 
 msgctxt "#43004"
-msgid "View Settings"
+msgid "Options d'affichage"
 msgstr ""
 
 msgctxt "#43005"
-msgid "Max Page Size"
+msgid "Qté Max Par Page"
 msgstr ""
 
 msgctxt "#43100"
-msgid "Recent Photos"
+msgid "Photos Récentes"
 msgstr ""
 
 msgctxt "#43101"
-msgid "Random Photos"
+msgid "Photos Aléatoires"
 msgstr ""
 
 msgctxt "#43102"
-msgid "Top Rated Photos"
+msgid "Photos Les Mieux Notées"
 msgstr ""
 
 msgctxt "#43103"
-msgid "Browse by Categories"
+msgid "Naviguer par Catégories"
 msgstr ""
 
 msgctxt "#43104"
-msgid "Browse by Tags"
+msgid "Naviguer par Étiquettes"
 msgstr ""
 
 msgctxt "#43105"
-msgid "Search"
+msgid "Recherche"
 msgstr ""
 
 msgctxt "#43106"
-msgid "Username and/or password incorrect"
+msgid "Nom d'utilisateur et/ou mot de passe incorrect(s)"
 msgstr ""
 
 msgctxt "#43107"
-msgid "Please check the configuration"
+msgid "Merci de vérifier votre configuration"
 msgstr ""
 
 msgctxt "#43108"
-msgid "Please check your logs"
+msgid "Merci de vérifier vos logs"
 msgstr ""
 
 msgctxt "#43109"
-msgid "There was an error retrieving data"
+msgid "Il y a eu une erreur lors de la réception des données"
 msgstr ""
 
 msgctxt "#43110"
-msgid "Method"
+msgid "Méthode"
 msgstr ""
 
 msgctxt "#43111"
-msgid "There was a problem communicating with the server"
+msgid "Il y a eu un problème de communication avec le serveur"
 msgstr ""
 
 msgctxt "#43112"
-msgid "There was a problem synchronizing the server"
+msgid "Il y a eu un problème de synchronisation avec le serveur"
 msgstr ""
 
 msgctxt "#43113"
-msgid "Search input can not be blank"
+msgid "Le champ de recherche ne peut pas être vide"
 msgstr ""
 
 msgctxt "#43114"
-msgid "Synchronize Server"
+msgid "Synchroniser avec le Serveur"
 msgstr ""
 
 msgctxt "#43115"
-msgid "Next Page"
+msgid "Page Suivante"
 msgstr ""
 
 msgctxt "#43116"
@@ -105,17 +105,17 @@ msgid "Total"
 msgstr ""
 
 msgctxt "#43117"
-msgid "Synchronization Successful"
+msgid "Synchronisation Réussie"
 msgstr ""
 
 msgctxt "#43118"
-msgid "Enter a search string"
+msgid "Entrez un élément de recherche"
 msgstr ""
 
 msgctxt "#43119"
-msgid "User Collections"
+msgid "Collections d'utilisateurs"
 msgstr ""
 
 msgctxt "#43120"
-msgid "Your Favorites"
+msgid "Vos favoris"
 msgstr ""

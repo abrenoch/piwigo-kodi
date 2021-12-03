@@ -16,7 +16,7 @@ msgctxt "#43000"
 msgid "General Settings"
 msgstr ""
 
-msgctxt "#33301"
+msgctxt "#43001"
 msgid "Server"
 msgstr ""
 
