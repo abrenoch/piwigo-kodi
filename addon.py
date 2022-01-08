@@ -228,9 +228,9 @@ def syncServer():
 	else:
 		response = conn.read()
 		conn.close()
-		if(response.find('scanning dirs')):
+		if response.find(b'scanning dirs'):
 			xbmc.executebuiltin('Notification(%s, %s, 5000, %s)'%(__addonname__, localize(43117), __icon__))
-		elif  response.find('synchronization is disabled'):
+		elif  response.find(b'synchronization is disabled'):
 			xbmc.executebuiltin('Notification(%s, %s, 5000, %s)'%(__addonname__, localize(43112), __icon__))
 		else:
 			xbmcgui.Dialog().ok(__addonname__, localize(43112), localize(43108))
