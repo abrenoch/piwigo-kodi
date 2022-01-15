@@ -1,0 +1,121 @@
+# Kodi Media Center language file
+# Addon Name: Kodi Piwigo
+# Addon id: plugin.image.piwigo
+# Addon Provider: abrenoch
+msgid ""
+msgstr ""
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en_GB\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "#43000"
+msgid "Paramètres généraux"
+msgstr ""
+
+msgctxt "#43001"
+msgid "Serveur"
+msgstr ""
+
+msgctxt "#43002"
+msgid "Nom d'utilisateur"
+msgstr ""
+
+msgctxt "#43003"
+msgid "Mot de passe"
+msgstr ""
+
+msgctxt "#43004"
+msgid "Options d'affichage"
+msgstr ""
+
+msgctxt "#43005"
+msgid "Qté Max Par Page"
+msgstr ""
+
+msgctxt "#43100"
+msgid "Photos Récentes"
+msgstr ""
+
+msgctxt "#43101"
+msgid "Photos Aléatoires"
+msgstr ""
+
+msgctxt "#43102"
+msgid "Photos Les Mieux Notées"
+msgstr ""
+
+msgctxt "#43103"
+msgid "Naviguer par Catégories"
+msgstr ""
+
+msgctxt "#43104"
+msgid "Naviguer par Étiquettes"
+msgstr ""
+
+msgctxt "#43105"
+msgid "Recherche"
+msgstr ""
+
+msgctxt "#43106"
+msgid "Nom d'utilisateur et/ou mot de passe incorrect(s)"
+msgstr ""
+
+msgctxt "#43107"
+msgid "Merci de vérifier votre configuration"
+msgstr ""
+
+msgctxt "#43108"
+msgid "Merci de vérifier vos logs"
+msgstr ""
+
+msgctxt "#43109"
+msgid "Il y a eu une erreur lors de la réception des données"
+msgstr ""
+
+msgctxt "#43110"
+msgid "Méthode"
+msgstr ""
+
+msgctxt "#43111"
+msgid "Il y a eu un problème de communication avec le serveur"
+msgstr ""
+
+msgctxt "#43112"
+msgid "Il y a eu un problème de synchronisation avec le serveur"
+msgstr ""
+
+msgctxt "#43113"
+msgid "Le champ de recherche ne peut pas être vide"
+msgstr ""
+
+msgctxt "#43114"
+msgid "Synchroniser avec le Serveur"
+msgstr ""
+
+msgctxt "#43115"
+msgid "Page Suivante"
+msgstr ""
+
+msgctxt "#43116"
+msgid "Total"
+msgstr ""
+
+msgctxt "#43117"
+msgid "Synchronisation Réussie"
+msgstr ""
+
+msgctxt "#43118"
+msgid "Entrez un élément de recherche"
+msgstr ""
+
+msgctxt "#43119"
+msgid "Collections d'utilisateurs"
+msgstr ""
+
+msgctxt "#43120"
+msgid "Vos favoris"
+msgstr ""
