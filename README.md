@@ -1,7 +1,7 @@
 plugin.image.piwigo
 ====================
 
-An Kodi (XBMC) add-on that let you browse (images and videos) from a public (or protected) [Piwigo](http://piwigo.org/) gallery instance.
+An Kodi add-on that let you browse (images and videos) from a public (or protected) [Piwigo](http://piwigo.org/) gallery instance.
 
 Installation
 ------------
