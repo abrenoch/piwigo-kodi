@@ -12,6 +12,10 @@ The add-on depends on the Kodi add-on "simplejson" to communicate with Piwigo..
 
  - Download the add-on as a ZIP file from the [release page](https://github.com/abrenoch/piwigo-kodi/releases)
    - (Right click on the "ZIP" icon and select "Download Linked File")
+   - Currently, there are no releases, so: 
+     - select "Download Zip" from the "Code" menu: 
+     - <img width="388" alt="download-instructions" src="https://user-images.githubusercontent.com/37251/153899762-996c5710-8ed1-47d5-a72e-e5d924ed7bb2.png">
+     - copy the ZIP to you Kodi system
  - Open Kodi
  - Go to `System -> Settings -> Add-ons -> Install from zip file`
    - Select the previously download file 
@@ -32,7 +36,7 @@ You can follow the discussion on the [Kodi Forum](http://forum.kodi.tv/showthrea
 Contribute
 ------
 
-If you would like to contribute translations please do so on [getlocalization.com](https://www.getlocalization.com/piwigokodi/)
+If you would like to contribute translations please do so on [getlocalization.com](https://www.getlocalization.com/piwigokodi/) (currently inactive)
 
 Thanks
 ------
